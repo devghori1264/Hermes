@@ -1,0 +1,30 @@
+app = 'uni-intel-core-backend'
+primary_region = 'iad'
+
+[build]
+  dockerfile = 'Dockerfile.backend'
+
+[env]
+  FLASK_ENV = 'production'
+  MAX_QUERY_LENGTH = '200'
+  PYTHONUNBUFFERED = '1'
+
+[http_service]
+  internal_port = 8080
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[checks]
+  [checks.health]
+    port = 8080
+    type = 'tcp'
+    interval = '15s'
+    timeout = '2s'
+    grace_period = '5s'
+
+[[vm]]
+  cpu_kind = 'shared'
+  cpus = 2
+  memory_mb = 4096

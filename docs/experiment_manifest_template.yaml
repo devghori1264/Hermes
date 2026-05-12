@@ -1,0 +1,11 @@
+experiment_id: exp_template
+dataset_snapshot: ds_v1
+feature_schema_hash: schema_v1
+training_config_hash: cfg_v1
+random_seed: 42
+metrics:
+  ndcg_at_10: null
+  recall_at_50: null
+confidence_intervals:
+  ndcg_at_10: null
+  recall_at_50: null

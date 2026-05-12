@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes-retrieval
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: hermes-retrieval
+  template:
+    metadata:
+      labels:
+        app: hermes-retrieval
+    spec:
+      containers:
+      - name: retrieval-service
+        image: hermes/retrieval:latest
+        resources:
+          requests:
+            cpu: "4"
+            memory: "16Gi"
+          limits:
+            cpu: "8"
+            memory: "32Gi"
+        ports:
+        - containerPort: 8000
+        env:
+        - name: SERVICE_ROLE
+          value: "retrieval"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hermes-retrieval-svc
+spec:
+  selector:
+    app: hermes-retrieval
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000

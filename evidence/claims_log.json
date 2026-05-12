@@ -1,0 +1,149 @@
+{
+  "created_utc": "2026 05 08T00:00:00Z",
+  "claims": [
+    {
+      "id": "c001",
+      "statement": "The ACM article is published in ACM Transactions on Information Systems Volume 44 Issue 4 with publication date 17 April 2026.",
+      "source_ids": [
+        "acm_dltr_2026"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c018",
+      "statement": "The MIND dataset page states that news articles include fields such as title, abstract, body, category, and entities, and impression logs include clicked and non clicked events plus user history, and the dataset is available for research under Microsoft Research License Terms.",
+      "source_ids": [
+        "mind_dataset_page"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c011",
+      "statement": "The MovieLens 32M README specifies movies.csv columns movieId, title, genres and ratings.csv columns userId, movieId, rating, timestamp.",
+      "source_ids": [
+        "movielens_ml32m_readme"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c012",
+      "statement": "The MovieLens 32M README provides MD5 checksums for links.csv, movies.csv, ratings.csv, and tags.csv.",
+      "source_ids": [
+        "movielens_ml32m_readme"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c013",
+      "statement": "The Amazon Reviews 2023 page defines review fields including rating, title, text, images, asin, parent_asin, user_id, timestamp, verified_purchase, and helpful_vote, and metadata fields including main_category, title, average_rating, rating_number, features, description, price, images, videos, store, categories, details, and parent_asin.",
+      "source_ids": [
+        "amazon_reviews_2023_page"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c014",
+      "statement": "The Amazon Review Data 2018 page describes review JSON lines with fields such as overall, reviewText, summary, asin, reviewerID, and metadata with fields such as title, feature, description, price, brand, and categories.",
+      "source_ids": [
+        "amazon_reviews_2018_page"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c015",
+      "statement": "The OULAD UCI page lists a dataset download zip and states the license is Creative Commons Attribution 4.0.",
+      "source_ids": [
+        "oulad_uci_page"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c016",
+      "statement": "The FMA README lists download urls and sha1 checksums for fma_metadata.zip, fma_small.zip, fma_medium.zip, fma_large.zip, and fma_full.zip.",
+      "source_ids": [
+        "fma_readme"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c017",
+      "statement": "The Wikimedia downloads portal lists mediawiki content file exports and links to legal information for reuse.",
+      "source_ids": [
+        "wikimedia_dumps_page"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c002",
+      "statement": "The ACM article surveys multi stage cascading ranking with matching, pre ranking, fine ranking, post ranking, and relevance ranking.",
+      "source_ids": [
+        "acm_dltr_2026"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c003",
+      "statement": "The ACM article highlights LLM based ranking methods and future research directions.",
+      "source_ids": [
+        "acm_dltr_2026"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c004",
+      "statement": "Florence 2 preprint was submitted on 10 Nov 2023 on arXiv.",
+      "source_ids": [
+        "arxiv_florence2_abs"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c005",
+      "statement": "Florence 2 describes a prompt based sequence to sequence vision foundation model and reports FLD 5B with 5.4 billion annotations on 126 million images.",
+      "source_ids": [
+        "arxiv_florence2_abs"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c006",
+      "statement": "The recommender systems repository is a project under the Linux Foundation of AI and Data and provides notebooks and utilities for recommendation systems.",
+      "source_ids": [
+        "gh_recommenders"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c007",
+      "statement": "Recommenders release 1.2.1 is listed as released on Dec 24 2024.",
+      "source_ids": [
+        "gh_recommenders"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c008",
+      "statement": "The AJAX movie repository describes a content based movie recommender with sentiment analysis that uses TMDB metadata and IMDb reviews.",
+      "source_ids": [
+        "gh_ajax_movie"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c009",
+      "statement": "The AJAX movie repository uses cosine similarity on textual details to compute similarity scores.",
+      "source_ids": [
+        "gh_ajax_movie"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "c010",
+      "statement": "The Florence 2 PDF could not be retrieved via the fetch tool at the time of logging.",
+      "source_ids": [
+        "arxiv_florence2_pdf"
+      ],
+      "status": "verified"
+    }
+  ]
+}

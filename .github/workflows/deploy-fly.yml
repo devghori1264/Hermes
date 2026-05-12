@@ -1,0 +1,84 @@
+name: deploy-fly
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: deployment target selector
+        type: choice
+        default: both
+        options:
+          - backend
+          - frontend
+          - both
+      skip_smoke:
+        description: skip post deploy HTTP checks
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  ship:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@v1
+      - name: execute
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_NONINTERACTIVE: "1"
+          INTERNAL_GATE_TOKEN: ${{ secrets.INTERNAL_GATE_TOKEN }}
+          SMOKE_BASE_URL: ${{ secrets.SMOKE_BASE_URL }}
+          TARGET: ${{ github.event.inputs.target }}
+          SKIP_SMOKE: ${{ github.event.inputs.skip_smoke }}
+        run: |
+          set -euo pipefail
+          BACKEND_APP=uni-intel-core-backend
+          FRONTEND_APP=hermesai
+          BASE="${SMOKE_BASE_URL:-https://${FRONTEND_APP}.fly.dev}"
+          deployed_be=0
+          deployed_fe=0
+          rollback_session() {
+            if [ "$deployed_fe" = "1" ]; then flyctl releases rollback --app "$FRONTEND_APP" || true; fi
+            if [ "$deployed_be" = "1" ]; then flyctl releases rollback --app "$BACKEND_APP" || true; fi
+            exit 1
+          }
+          retry_curl() {
+            url="$1"
+            hdr="$2"
+            n=0
+            while [ "$n" -lt 24 ]; do
+              if [ -n "$hdr" ]; then
+                curl -fsS -H "X-Admin-Access-Token: $hdr" "$url" >/dev/null && return 0
+              else
+                curl -fsS "$url" >/dev/null && return 0
+              fi
+              n=$((n+1))
+              sleep 5
+            done
+            return 1
+          }
+          do_be() {
+            flyctl deploy --config fly.backend.toml --remote-only --strategy rolling || { flyctl releases rollback --app "$BACKEND_APP"; exit 1; }
+            deployed_be=1
+          }
+          do_fe() {
+            flyctl deploy --config fly.frontend.toml --remote-only --strategy rolling || { flyctl releases rollback --app "$FRONTEND_APP"; exit 1; }
+            deployed_fe=1
+          }
+          if [ "$TARGET" = "backend" ] || [ "$TARGET" = "both" ]; then do_be; fi
+          if [ "$TARGET" = "frontend" ] || [ "$TARGET" = "both" ]; then do_fe; fi
+          if [ "$SKIP_SMOKE" = "true" ]; then exit 0; fi
+          if [ "$TARGET" = "frontend" ] || [ "$TARGET" = "both" ]; then
+            retry_curl "$BASE/" "" || rollback_session
+            if [ -n "${INTERNAL_GATE_TOKEN:-}" ]; then
+              retry_curl "$BASE/api/metrics" "$INTERNAL_GATE_TOKEN" || rollback_session
+            fi
+          elif [ "$TARGET" = "backend" ]; then
+            if [ -n "${INTERNAL_GATE_TOKEN:-}" ]; then
+              retry_curl "$BASE/api/metrics" "$INTERNAL_GATE_TOKEN" || rollback_session
+            else
+              retry_curl "$BASE/" "" || rollback_session
+            fi
+          fi

@@ -1,0 +1,21 @@
+{
+  "dataset_id": "movies_catalog",
+  "version": "v1",
+  "license_name": "local",
+  "source_uri": "datasets/main_data.csv",
+  "snapshot_utc": "2026_05_08T10:22:09Z",
+  "content_hash": "a12643dce89e2bdd3206eb7e64e5600af0828a72b76e2f779ee13bbd5a620c81",
+  "schema_hash": "62bfc8109c4caf198b048aad5f358eaaa9fafb746090fb6c8ee19053d21bdc37",
+  "extra": {
+    "row_count": 6010,
+    "columns": [
+      "director_name",
+      "actor_1_name",
+      "actor_2_name",
+      "actor_3_name",
+      "genres",
+      "movie_title",
+      "comb"
+    ]
+  }
+}

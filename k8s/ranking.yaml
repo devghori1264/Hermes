@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes-ranking
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hermes-ranking
+  template:
+    metadata:
+      labels:
+        app: hermes-ranking
+    spec:
+      containers:
+      - name: ranking-service
+        image: hermes/ranking:latest
+        resources:
+          requests:
+            cpu: "8"
+            memory: "32Gi"
+            nvidia.com/gpu: "1"
+          limits:
+            cpu: "16"
+            memory: "64Gi"
+            nvidia.com/gpu: "1"
+        ports:
+        - containerPort: 8001
+        env:
+        - name: SERVICE_ROLE
+          value: "ranking"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hermes-ranking-svc
+spec:
+  selector:
+    app: hermes-ranking
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8001

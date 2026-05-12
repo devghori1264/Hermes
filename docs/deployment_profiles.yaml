@@ -1,0 +1,28 @@
+profiles:
+  lean:
+    max_candidates: 80
+    pre_rank_k: 30
+    final_k: 10
+    multimodal_mode: fallback
+    security_mode: strict
+    explanation_mode: deterministic
+    test_selector: "not quality"
+    target_fast_test_seconds: 10
+  mid:
+    max_candidates: 200
+    pre_rank_k: 60
+    final_k: 20
+    multimodal_mode: standard
+    security_mode: strict
+    explanation_mode: deterministic
+    test_selector: "not quality"
+    target_fast_test_seconds: 10
+  aggressive:
+    max_candidates: 500
+    pre_rank_k: 120
+    final_k: 40
+    multimodal_mode: enriched
+    security_mode: strict
+    explanation_mode: deterministic
+    test_selector: "quality"
+    target_fast_test_seconds: 20

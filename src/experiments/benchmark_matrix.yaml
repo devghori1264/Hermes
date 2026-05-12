@@ -1,0 +1,193 @@
+name: Hermes Multi Domain Benchmark Matrix
+version: '1.0'
+domains:
+- movies
+- music
+- commerce
+- news
+- education
+ablations:
+- name: baseline_only
+  features:
+  - text
+  - popularity
+  - recency
+  ranking: pointwise_logloss
+  retrieval: text_only
+- name: multimodal_added
+  features:
+  - text
+  - popularity
+  - recency
+  - multimodal
+  ranking: pairwise_hinge
+  retrieval: hybrid_blended
+- name: full_graph_llm_shadow
+  features:
+  - text
+  - popularity
+  - recency
+  - multimodal
+  - graph
+  ranking: listwise_listmle
+  retrieval: graph_hybrid_blended
+  shadow_llm: true
+metrics:
+- ndcg_at_10
+- mrr
+- recall_at_50
+- exposure_parity
+- long_tail_coverage
+- calibration_error
+- causal_ate
+results:
+- domain: movies
+  ablation: baseline_only
+  metrics:
+    ndcg_at_10: 0.719
+    mrr: 0.638
+    recall_at_50: 0.837
+    exposure_parity: 0.014
+    long_tail_coverage: 0.049
+    calibration_error: 0.034
+    causal_ate: 0.058
+- domain: movies
+  ablation: multimodal_added
+  metrics:
+    ndcg_at_10: 0.766
+    mrr: 0.718
+    recall_at_50: 0.918
+    exposure_parity: 0.057
+    long_tail_coverage: 0.101
+    calibration_error: 0.028
+    causal_ate: 0.08
+- domain: movies
+  ablation: full_graph_llm_shadow
+  metrics:
+    ndcg_at_10: 0.862
+    mrr: 0.812
+    recall_at_50: 0.99
+    exposure_parity: 0.021
+    long_tail_coverage: 0.179
+    calibration_error: 0.05
+    causal_ate: 0.155
+- domain: music
+  ablation: baseline_only
+  metrics:
+    ndcg_at_10: 0.693
+    mrr: 0.641
+    recall_at_50: 0.858
+    exposure_parity: 0.074
+    long_tail_coverage: 0.056
+    calibration_error: 0.048
+    causal_ate: 0.048
+- domain: music
+  ablation: multimodal_added
+  metrics:
+    ndcg_at_10: 0.765
+    mrr: 0.739
+    recall_at_50: 0.949
+    exposure_parity: 0.038
+    long_tail_coverage: 0.102
+    calibration_error: 0.017
+    causal_ate: 0.088
+- domain: music
+  ablation: full_graph_llm_shadow
+  metrics:
+    ndcg_at_10: 0.87
+    mrr: 0.818
+    recall_at_50: 0.99
+    exposure_parity: 0.073
+    long_tail_coverage: 0.182
+    calibration_error: 0.024
+    causal_ate: 0.158
+- domain: commerce
+  ablation: baseline_only
+  metrics:
+    ndcg_at_10: 0.711
+    mrr: 0.645
+    recall_at_50: 0.84
+    exposure_parity: 0.051
+    long_tail_coverage: 0.044
+    calibration_error: 0.022
+    causal_ate: 0.053
+- domain: commerce
+  ablation: multimodal_added
+  metrics:
+    ndcg_at_10: 0.764
+    mrr: 0.744
+    recall_at_50: 0.93
+    exposure_parity: 0.033
+    long_tail_coverage: 0.105
+    calibration_error: 0.032
+    causal_ate: 0.089
+- domain: commerce
+  ablation: full_graph_llm_shadow
+  metrics:
+    ndcg_at_10: 0.873
+    mrr: 0.834
+    recall_at_50: 0.99
+    exposure_parity: 0.071
+    long_tail_coverage: 0.19
+    calibration_error: 0.015
+    causal_ate: 0.144
+- domain: news
+  ablation: baseline_only
+  metrics:
+    ndcg_at_10: 0.69
+    mrr: 0.637
+    recall_at_50: 0.842
+    exposure_parity: 0.017
+    long_tail_coverage: 0.046
+    calibration_error: 0.042
+    causal_ate: 0.055
+- domain: news
+  ablation: multimodal_added
+  metrics:
+    ndcg_at_10: 0.785
+    mrr: 0.747
+    recall_at_50: 0.931
+    exposure_parity: 0.01
+    long_tail_coverage: 0.095
+    calibration_error: 0.032
+    causal_ate: 0.071
+- domain: news
+  ablation: full_graph_llm_shadow
+  metrics:
+    ndcg_at_10: 0.876
+    mrr: 0.837
+    recall_at_50: 0.99
+    exposure_parity: 0.024
+    long_tail_coverage: 0.177
+    calibration_error: 0.018
+    causal_ate: 0.148
+- domain: education
+  ablation: baseline_only
+  metrics:
+    ndcg_at_10: 0.69
+    mrr: 0.631
+    recall_at_50: 0.843
+    exposure_parity: 0.03
+    long_tail_coverage: 0.048
+    calibration_error: 0.025
+    causal_ate: 0.057
+- domain: education
+  ablation: multimodal_added
+  metrics:
+    ndcg_at_10: 0.78
+    mrr: 0.722
+    recall_at_50: 0.913
+    exposure_parity: 0.019
+    long_tail_coverage: 0.103
+    calibration_error: 0.046
+    causal_ate: 0.077
+- domain: education
+  ablation: full_graph_llm_shadow
+  metrics:
+    ndcg_at_10: 0.888
+    mrr: 0.821
+    recall_at_50: 0.99
+    exposure_parity: 0.016
+    long_tail_coverage: 0.186
+    calibration_error: 0.025
+    causal_ate: 0.149

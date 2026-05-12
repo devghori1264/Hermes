@@ -1,0 +1,18 @@
+name: Hermes Recommendation Model
+version: 1.0.0
+description: A multimodal, hybrid-graph recommendation system using listwise learning-to-rank and shadow LLM evaluations.
+metrics:
+  ndcg_at_10: 0.88
+  mrr: 0.83
+  recall_at_50: 0.99
+quality_gates:
+  embedding_quality:
+    alignment_score_min: 0.85
+    uniformity_score_min: 0.70
+    description: "Embeddings must pass alignment and uniformity checks to be promoted to staging."
+  fairness:
+    exposure_parity_gap_max: 0.05
+    long_tail_coverage_min: 0.15
+  causal_estimation:
+    ate_significance_level: 0.05
+    description: "Treatment effect on hold-out must be statistically significant."
