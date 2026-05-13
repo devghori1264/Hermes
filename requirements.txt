@@ -15,7 +15,7 @@ lxml==6.1.0
 urllib3==2.7.0
 requests>=2.34.0
 pickleshare==0.7.5
-transformers>=5.8.0
+transformers>=5.8.1
 torch>=2.11.0
 Pillow>=12.2.0
 opencv-python-headless>=4.13.0.92

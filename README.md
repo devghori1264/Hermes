@@ -831,7 +831,7 @@ Because of the heavy containerization, getting Hermes running locally is remarka
 
 **Step 1: Clone the Repository**
 ```bash
-git clone https://github.com/your-username/hermes.git
+git clone https://github.com/devghori1264/hermes.git
 cd hermes
 ```
 
