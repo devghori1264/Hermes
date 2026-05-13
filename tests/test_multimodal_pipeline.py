@@ -25,5 +25,5 @@ def test_model_backed_multimodal_service_includes_florence_encoder(monkeypatch) 
 
     assert "TextSentenceEncoder" in encoder_types
     assert "Florence2ImageEncoder" in encoder_types
-    assert "AudioSignalEncoder" in encoder_types
+    assert "HubertAudioEncoder" in encoder_types
     assert "VideoFrameEncoder" in encoder_types

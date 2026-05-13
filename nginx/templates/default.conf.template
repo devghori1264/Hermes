@@ -10,13 +10,13 @@ server {
     add_header X-XSS-Protection "1; mode=block" always;
     add_header Content-Security-Policy "default-src 'self'; connect-src 'self' https://*; img-src 'self' data: https://*; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data: https://fonts.gstatic.com; worker-src 'self';" always;
     location / {
-        try_files $$uri $$uri/ /index.html;
+        try_files $uri $uri/ /index.html;
     }
     location /api/ {
         proxy_pass ${BACKEND_INTERNAL_URL};
-        proxy_set_header Host $$host;
-        proxy_set_header X-Real-IP $$remote_addr;
-        proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Admin-Access-Token ${INTERNAL_GATE_TOKEN};
         proxy_read_timeout 180s;
         proxy_connect_timeout 180s;
@@ -27,9 +27,9 @@ server {
     }
     location /similarity {
         proxy_pass ${BACKEND_INTERNAL_URL};
-        proxy_set_header Host $$host;
-        proxy_set_header X-Real-IP $$remote_addr;
-        proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Admin-Access-Token ${INTERNAL_GATE_TOKEN};
         proxy_read_timeout 180s;
         proxy_connect_timeout 180s;
@@ -40,9 +40,9 @@ server {
     }
     location /recommend {
         proxy_pass ${BACKEND_INTERNAL_URL};
-        proxy_set_header Host $$host;
-        proxy_set_header X-Real-IP $$remote_addr;
-        proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Admin-Access-Token ${INTERNAL_GATE_TOKEN};
         proxy_read_timeout 180s;
         proxy_connect_timeout 180s;

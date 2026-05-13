@@ -31,7 +31,8 @@ def test_listwise_softmax_loss() -> None:
 
 
 def test_supported_objectives() -> None:
-    assert supported_objectives() == (POINTWISE_LOGLOSS, PAIRWISE_HINGE, LISTWISE_SOFTMAX)
+    from src.ranking.losses import POINTWISE_LOGLOSS, POINTWISE_FOCAL, PAIRWISE_HINGE, LISTWISE_SOFTMAX, LISTWISE_LISTMLE, LISTWISE_LAMBDARANK
+    assert supported_objectives() == (POINTWISE_LOGLOSS, POINTWISE_FOCAL, PAIRWISE_HINGE, LISTWISE_SOFTMAX, LISTWISE_LISTMLE, LISTWISE_LAMBDARANK)
 
 
 @pytest.mark.parametrize(

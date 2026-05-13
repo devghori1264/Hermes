@@ -37,8 +37,14 @@
 | Figure | Title | Section |
 |--------|-------|---------|
 | [Figure 1](#figure-1-system-architecture) | System Architecture — High-Level Data Flow | [Technical Architecture](#technical-architecture) |
-| [Figure 2](#figure-2-multi-stage-ranking) | Multi-Stage DLTR Pipeline | [Technical Architecture](#technical-architecture) |
-| [Figure 3](#figure-3-ci-cd-pipeline) | Automated Deployment and Rollback Matrix | [Production Deployment](#production-deployment) |
+| [Figure 2](#figure-2-multi-stage-dltr-pipeline) | Multi-Stage DLTR Pipeline | [Technical Architecture](#technical-architecture) |
+| [Figure 2.1](#figure-21-semantic-query-resolution-and-retrieval-flow) | Semantic Query Resolution and Retrieval Flow | [Technical Architecture](#technical-architecture) |
+| [Figure 2.2](#figure-22-universal-data-ingestion-and-multimodal-pipeline) | Universal Data Ingestion and Multimodal Pipeline | [Technical Architecture](#technical-architecture) |
+| [Figure 2.3](#figure-23-generative-grounding-and-guardrail-subsystem) | Generative Grounding and Guardrail Subsystem | [Technical Architecture](#technical-architecture) |
+| [Figure 2.4](#figure-24-deterministic-policy-and-fairness-reranking-engine) | Deterministic Policy and Fairness Reranking Engine | [Technical Architecture](#technical-architecture) |
+| [Figure 2.5](#figure-25-distributed-telemetry-and-circuit-breaker-topologies) | Distributed Telemetry and Circuit Breaker Topologies | [Technical Architecture](#technical-architecture) |
+| [Figure 2.6](#figure-26-offline-to-online-causal-ab-testing-matrix) | Offline-to-Online Causal A/B Testing Matrix | [Technical Architecture](#technical-architecture) |
+| [Figure 3](#figure-3-automated-deployment-and-rollback-matrix) | Automated Deployment and Rollback Matrix | [Production Deployment](#production-deployment) |
 
 ### List of Screenshots
 
@@ -47,7 +53,7 @@
 | [Homepage](#homepage) | The unified multi-domain entry point | [System Preview](#system-preview) |
 | [Categories](#categories) | Cross-domain taxonomy and visual layout | [System Preview](#system-preview) |
 | [Search Results](#search-results) | Vector and text hybrid retrieval interface | [System Preview](#system-preview) |
-| [Cold Start Resolution](#cold-start-resolution) | Florence-2 powered zero-shot recommendations | [System Preview](#system-preview) |
+| [Cold Start Resolution](#cold-start-resolution) | Model powered zero-shot recommendations | [System Preview](#system-preview) |
 | [List Expansion](#list-expansion) | Fairness policy and diversity re-ranking | [System Preview](#system-preview) |
 | [Hermes Agent](#hermes-agent) | The conversational intelligence interface | [System Preview](#system-preview) |
 
@@ -65,7 +71,7 @@ In the modern commercial landscape, recommendation systems dictate human attenti
 
 ### My Contributions
 I designed Hermes as a unified, domain-agnostic intelligence layer. This is not a college prototype; it is an industrial-grade, PhD-level execution that combines:
-* **Florence-2 Vision Integration**: Translating raw pixels into rich semantic vectors to instantly resolve the cold-start problem.
+* **Model Vision Integration**: Translating raw pixels into rich semantic vectors to instantly resolve the cold-start problem.
 * **Deep Learning to Rank (DLTR)**: Implementing advanced ListMLE objectives and survival modeling (DEFER/DEFUSE) to correct for delayed feedback.
 * **Mathematically Grounded LLMs**: Utilizing the attribution matrices of the neural ranker to constrain a large language model, allowing the system to explain its exact reasoning to the user without hallucination.
 * **Causal Inference**: Validating off-policy metrics using Doubly Robust Estimators to prove genuine uplift before code ever hits production.
@@ -118,7 +124,7 @@ The following visuals demonstrate the Hermes ecosystem, from multi-domain ingest
 
 <img src="media/images/3_cold_start.png" alt="Cold Start" width="100%"/>
 
-*Zero-interaction items recommended instantly based on Florence-2 visual and semantic feature extraction.*
+*Zero-interaction items recommended instantly based on Model visual and semantic feature extraction.*
 
 </td>
 </tr>
@@ -182,116 +188,30 @@ Hermes does not hallucinate. It mathematically translates neural network attribu
 
 ### Figure 1: System Architecture
 
-```mermaid
-graph TD
-    subgraph Client Layer
-        UI[React / Vite Frontend]
-        Nginx[Nginx Security Proxy]
-    end
-
-    subgraph Orchestration
-        API[FastAPI Gateway]
-        Cache[(Redis Cache)]
-    end
-
-    subgraph Data & Feature Engine
-        Ingest[Universal Ingestion]
-        F2[Florence-2 Vision Encoder]
-        DB[(PostgreSQL)]
-        Vector[(ANN Vector Index)]
-    end
-
-    subgraph Intelligence Core
-        Ret[Retrieval Blending]
-        Rank[DLTR Multi-Stage Cascade]
-        Gen[Grounded LLM Explainer]
-    end
-
-    UI -->|HTTPS| Nginx
-    Nginx -->|X-Admin-Access-Token| API
-    API <--> Cache
-    
-    Ingest --> F2
-    F2 --> Vector
-    Ingest --> DB
-    
-    API --> Ret
-    Ret --> Vector
-    Ret --> Rank
-    Rank --> Gen
-    Gen --> API
-```
+<div align="center">
+<img src="media/figures/f1.png" alt="System Architecture" width="100%"/>
+</div>
 
 ### Figure 2: Multi-Stage DLTR Pipeline
 
-```mermaid
-flowchart LR
-    A[User Request] --> B(Matching / Retrieval)
-    B -->|Thousands of Items| C(Pre-Ranking)
-    C -->|Hundreds of Items| D(Fine-Ranking)
-    D -->|Top 50 Items| E(Policy Re-ranking)
-    E --> F[Final Slate]
-
-    subgraph Retrieval Strategies
-        B1(LightGCN)
-        B2(SASRec)
-        B3(Vector ANN)
-    end
-    B -.-> B1 & B2 & B3
-
-    subgraph Fine-Ranking
-        D1(ListMLE Loss)
-        D2(DEFER Delay Correction)
-    end
-    D -.-> D1 & D2
-```
+<div align="center">
+<img src="media/figures/f2.png" alt="Multi-Stage DLTR Pipeline" width="100%"/>
+</div>
 
 ### Figure 2.1: Semantic Query Resolution and Retrieval Flow
 
 The retrieval engine is the most time-sensitive component of the entire architecture. It must parse human intent, resolve semantic ambiguity, and filter millions of candidates into thousands within milliseconds.
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant API as FastAPI Router
-    participant NLP as Query Parser (LLM/Spacy)
-    participant FAISS as ANN Vector Index
-    participant Graph as Knowledge Graph (Neo4j/RedisGraph)
-    participant Blend as Retrieval Orchestrator
-
-    User->>API: Submits Natural Language Query
-    API->>NLP: Request Intent Extraction
-    
-    rect rgb(30, 40, 50)
-        note right of NLP: Intent & Entity Resolution
-        NLP->>NLP: Tokenization & Normalization
-        NLP->>NLP: Named Entity Recognition (NER)
-        NLP->>NLP: Dense Embedding Generation (768-d)
-    end
-    
-    NLP-->>API: Structured Intent + Query Vector
-    
-    par Vector Search
-        API->>FAISS: Maximum Inner Product Search (MIPS)
-        FAISS-->>Blend: Top 500 Semantic Matches
-    and Graph Traversal
-        API->>Graph: Multi-hop Edge Traversal (Entity -> Tags)
-        Graph-->>Blend: Top 500 Relational Matches
-    and Collaborative Filtering
-        API->>Blend: LightGCN / SASRec Pre-computed Candidates
-    end
-    
-    Blend->>Blend: Deduplication & Confidence Weighting
-    Blend-->>API: Final 1000 Blended Candidates
-    API-->>User: Hands off to Pre-Ranker
-```
+<div align="center">
+<img src="media/figures/f3.jpg" alt="Semantic Query Resolution and Retrieval Flow" width="100%"/>
+</div>
 
 **Query Parsing and Entity Resolution**
 When a user inputs a query, the system does not simply execute a SQL `LIKE` statement. The query is intercepted by the NLP parser, which utilizes a lightweight transformer encoder to generate a dense 768-dimensional vector representing the semantic meaning of the sentence. Simultaneously, a Named Entity Recognition (NER) module strips out explicit constraints (e.g., extracting "Sci-Fi" as a genre constraint, or "2026" as a temporal boundary).
 
 **Concurrent Multi-Strategy Retrieval**
 To maximize recall without sacrificing latency, the retrieval orchestrator fires asynchronous requests to three distinct datastores:
-*   **The ANN Index (FAISS)**: Executes a Maximum Inner Product Search (MIPS) comparing the query vector against the Florence-2 and Text embedding vectors of the entire catalog.
+*   **The ANN Index (FAISS)**: Executes a Maximum Inner Product Search (MIPS) comparing the query vector against the Model and Text embedding vectors of the entire catalog.
 *   **The Knowledge Graph**: Executes a graph traversal. If the NER module identified a specific director, the graph traverses outward from the director node to find all associated films, and then traverses to actors within those films to expand the relational net.
 *   **Sequential Collaborative Models**: The SASRec (Self-Attentive Sequential Recommendation) model evaluates the user's immediate session history to inject candidates that match the immediate temporal trajectory, completely bypassing the explicit search query.
 
@@ -302,50 +222,15 @@ The results from these three independent streams are non-deterministic and often
 
 The intelligence of Hermes is strictly bounded by the quality of its feature store. The ingestion pipeline acts as a rigorous barrier against data corruption.
 
-```mermaid
-flowchart TD
-    subgraph External Sources
-        API1[TMDB / IMDB APIs]
-        API2[E-Commerce Catalogs]
-        API3[News RSS Feeds]
-    end
-
-    subgraph Validation & Ingestion
-        Val1{Pydantic Contract Validation}
-        Clean[Entity Resolution & Deduplication]
-    end
-
-    subgraph Multimodal Feature Extraction
-        TextEnc[Transformer Text Encoder]
-        VisEnc[Florence-2 Vision Encoder]
-        AudEnc[Audio/Spectrogram Encoder]
-    end
-
-    subgraph Storage Tier
-        Rel[(PostgreSQL Core Meta)]
-        Feat[(Immutable Feature Store)]
-        Index[(FAISS / Milvus)]
-    end
-
-    API1 & API2 & API3 --> Val1
-    Val1 -->|Malformed Payload| Drop[Discard & Log]
-    Val1 -->|Valid Payload| Clean
-    
-    Clean --> TextEnc & VisEnc & AudEnc
-    Clean --> Rel
-    
-    TextEnc --> Feat
-    VisEnc --> Feat
-    AudEnc --> Feat
-    
-    Feat --> Index
-```
+<div align="center">
+<img src="media/figures/f4.png" alt="Universal Data Ingestion and Multimodal Pipeline" width="100%"/>
+</div>
 
 **Data Contracts and Hard Validation**
 Every payload entering the system must pass through a strict Pydantic model validation schema. This schema enforces structural integrity. It guarantees that regardless of whether the source is a movie database or a shopping catalog, the resulting object inside Hermes possesses a unified taxonomy. Invalid payloads are immediately dropped, preventing downstream cascading failures in the PyTorch training loops.
 
-**The Florence-2 Extraction Engine**
-Once validated, the media assets are asynchronously fetched and passed to the Multimodal Feature Extraction tier. For visual data, Hermes leverages Microsoft's Florence-2 architecture. Unlike traditional ResNet architectures that only provide abstract convolutional features, Florence-2 is a sequence-to-sequence model. We prompt it dynamically to generate dense captions, isolate background concepts, and identify specific foreground objects. The output sequence is then pooled into a unified dense embedding. 
+**The Model Extraction Engine**
+Once validated, the media assets are asynchronously fetched and passed to the Multimodal Feature Extraction tier. For visual data, Hermes leverages Model architecture. Unlike traditional ResNet architectures that only provide abstract convolutional features, Model is a sequence-to-sequence model. We prompt it dynamically to generate dense captions, isolate background concepts, and identify specific foreground objects. The output sequence is then pooled into a unified dense embedding. 
 
 **Immutable Feature Store**
 The extracted vectors are not stored in standard relational tables. They are written to an immutable Feature Store. This immutability is critical for reproducibility. If a model was trained on Version 1 of the feature set, those features must never be overwritten, or the offline evaluation metrics become instantly corrupted. The Feature Store handles versioning, point-in-time reads, and batch serving for the training pipelines.
@@ -354,34 +239,9 @@ The extracted vectors are not stored in standard relational tables. They are wri
 
 Integrating Large Language Models into a production system introduces massive security and hallucination risks. Hermes employs a strict state-machine architecture to sandbox the generative layer.
 
-```mermaid
-stateDiagram-v2
-    [*] --> ContextInitialization
-    
-    state ContextInitialization {
-        [*] --> FetchRankingAttribution
-        FetchRankingAttribution --> ConstructPrompt
-    }
-    
-    ContextInitialization --> MiddlewareAudit
-    
-    state MiddlewareAudit {
-        [*] --> HeuristicCheck
-        HeuristicCheck --> SemanticCheck
-        SemanticCheck --> PromptInjectionDetector
-    }
-    
-    MiddlewareAudit --> LLMInference : Passed
-    MiddlewareAudit --> FallbackResponse : Failed (Attack Detected)
-    
-    state LLMInference {
-        [*] --> GenerateResponse
-        GenerateResponse --> PostProcessVerification
-    }
-    
-    LLMInference --> [*]
-    FallbackResponse --> [*]
-```
+<div align="center">
+<img src="media/figures/f5.png" alt="Generative Grounding and Guardrail Subsystem" width="100%"/>
+</div>
 
 **Attribution Injection**
 The LLM does not decide what to recommend. It only explains *why* the DLTR pipeline recommended it. The `FetchRankingAttribution` state extracts the exact gradient activations from the fine-ranking neural network. If the user's historical click on a specific genre contributed 60% of the final score, this mathematical fact is injected into the LLM's system prompt.
@@ -393,25 +253,9 @@ Before the prompt ever reaches the LLM inference engine, it must survive the `Mi
 
 Algorithms naturally converge on popularity bias. The rich get richer, and niche content is buried. The Policy Engine forces the mathematical distribution of exposure.
 
-```mermaid
-flowchart TD
-    In[Top 50 Scored Candidates from DLTR] --> Aud[Fairness Auditor]
-    
-    Aud -->|Check 1| Div{Intra-List Diversity < Threshold?}
-    Div -->|Yes| Pen[Apply Redundancy Penalty (MMR)]
-    Div -->|No| Next1[Proceed]
-    
-    Pen --> Exp{Cohort Exposure < Target Parity?}
-    Next1 --> Exp
-    
-    Exp -->|Yes| Boost[Apply Inverse Exposure Boost]
-    Exp -->|No| Next2[Proceed]
-    
-    Boost --> Sort[Deterministic Re-Sort]
-    Next2 --> Sort
-    
-    Sort --> Out[Final Top 20 Slate]
-```
+<div align="center">
+<img src="media/figures/f6.png" alt="Deterministic Policy and Fairness Reranking Engine" width="100%"/>
+</div>
 
 **Maximal Marginal Relevance (MMR)**
 If the DLTR pipeline scores five Batman movies as the top five items, the list is highly accurate but fundamentally useless for exploration. The `Intra-List Diversity` check calculates the cosine similarity between all candidates in the slate. If the slate is too homogenous, it applies a Maximal Marginal Relevance (MMR) penalty. MMR mathematically subtracts the similarity of a candidate to the already-selected items from its absolute relevance score, forcing the inclusion of diverse, orthogonal items.
@@ -423,43 +267,9 @@ The system tracks the historical impression counts of every creator cohort. If t
 
 A recommendation system is a distributed microservice mesh. If one node fails, it must not cascade.
 
-```mermaid
-graph TD
-    subgraph API Gateway
-        Req[Incoming Request]
-        Trace[OpenTelemetry Injector]
-    end
-
-    subgraph Service Mesh
-        CB1((Circuit Breaker))
-        CB2((Circuit Breaker))
-        CB3((Circuit Breaker))
-        
-        S1[Retrieval Service]
-        S2[Ranking Service]
-        S3[Generative Service]
-    end
-
-    subgraph Fallbacks
-        F1[Trending Cache]
-        F2[Pre-Rank Only]
-        F3[Standard UI (No LLM)]
-    end
-
-    Req --> Trace
-    Trace --> CB1
-    
-    CB1 -->|Closed (Healthy)| S1
-    CB1 -.->|Open (Failing)| F1
-    
-    S1 --> CB2
-    CB2 -->|Closed (Healthy)| S2
-    CB2 -.->|Open (Failing)| F2
-    
-    S2 --> CB3
-    CB3 -->|Closed (Healthy)| S3
-    CB3 -.->|Open (Failing)| F3
-```
+<div align="center">
+<img src="media/figures/f7.png" alt="Distributed Telemetry and Circuit Breaker Topologies" width="100%"/>
+</div>
 
 **OpenTelemetry and Trace Propagation**
 Every request is stamped with an OpenTelemetry Trace ID at the gateway. This ID is passed in the headers to every downstream service. If the Generative Service throws an exception, the logs are immediately correlated with the exact Retrieval vector query that initiated the cascade. This allows for instantaneous debugging of complex, multi-hop failures.
@@ -471,23 +281,9 @@ Every service boundary is protected by a Circuit Breaker. If the `Ranking Servic
 
 The gap between offline metrics (like NDCG) and online business impact (like Long-Term Retention) is the deadliest trap in recommendation engineering. 
 
-```mermaid
-gantt
-    title Algorithmic Promotion Lifecycle
-    dateFormat  YYYY-MM-DD
-    section Phase 1: Offline
-    Train New Model (V2)           :active, a1, 2026-05-01, 7d
-    Backtest vs Historical Data    :a2, after a1, 3d
-    section Phase 2: Causal Simulation
-    Inverse Propensity Scoring     :a3, after a2, 3d
-    Doubly Robust Estimation       :a4, after a3, 4d
-    section Phase 3: Online Guardrails
-    Shadow Deployment (No UI Impact) :a5, after a4, 5d
-    5% Canary A/B Test             :a6, after a5, 7d
-    section Phase 4: Production
-    Statistical Significance Audit :a7, after a6, 2d
-    100% Global Rollout            :a8, after a7, 1d
-```
+<div align="center">
+<img src="media/figures/f8.png" alt="Offline-to-Online Causal A/B Testing Matrix" width="100%"/>
+</div>
 
 **Shadow Deployments**
 Before a model ever affects a user, it is deployed in "Shadow Mode." The production API sends the user's request to both the V1 and V2 models simultaneously. The UI only renders the V1 results, but the V2 results are logged to the data warehouse. This allows us to monitor the computational latency and memory consumption of the V2 model under live production load without risking user experience.
@@ -509,7 +305,7 @@ Standard A/B testing is insufficient because it is susceptible to network effect
 
 **ML & Intelligence Stack**:
 * **Deep Learning**: PyTorch 2.2 
-* **Vision Foundation**: Microsoft Florence-2 (Sequence-to-Sequence Vision-Language)
+* **Vision Foundation**: Custom Model (Sequence-to-Sequence Vision-Language)
 * **Recommendation Algorithms**: Implementations derived from the Recommenders repository (LightGCN, SASRec, xDeepFM)
 * **Explainability**: Open-source LLMs (Llama-3 architecture) strictly constrained by ranking attribution matrices
 
@@ -538,7 +334,7 @@ hermes/
 │   │   │   ├── ranking.py            # DLTR Pre-rank and Fine-rank cascade
 │   │   │   └── generative.py         # LLM context grounding and prompting
 │   │   └── ml/                       # Machine Learning architectures
-│   │       ├── encoders/             # Florence-2 and Text embedding generation
+│   │       ├── encoders/             # Model and Text embedding generation
 │   │       ├── dltr/                 # Two-Tower, xDeepFM, ListMLE networks
 │   │       └── causal/               # Inverse Propensity Scoring evaluators
 │   ├── tests/                        # Pytest suite (Unit and Integration)
@@ -589,7 +385,7 @@ class UniversalAsset(BaseModel):
     image_uri: Optional[str] = Field(None, description="Pointer to asset image")
     text_content: Optional[str] = Field(None, description="Descriptions or articles")
     
-    # Pre-computed Florence-2 / Text Embeddings
+    # Pre-computed Model / Text Embeddings
     dense_features: Optional[List[float]] = Field(None, description="768-d vector representation")
     
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -645,7 +441,7 @@ def build_grounded_prompt(user_query: str, ranked_item: UniversalAsset, attribut
     
     MATHEMATICAL ATTRIBUTION (Do not mention the numbers, translate them to logic):
     - Sequential History Weight: {attribution['sequence_match']}
-    - Visual Similarity (Florence-2) Weight: {attribution['visual_match']}
+    - Visual Similarity (Model) Weight: {attribution['visual_match']}
     - Collaborative Filtering Weight: {attribution['collaborative_match']}
     
     RULES:
@@ -731,9 +527,9 @@ However, IPS suffers from massive variance when $\pi_0$ is very small (e.g., div
 
 **The Beauty of the DR Estimator:** It is "doubly robust" because the offline evaluation is mathematically unbiased if *either* the propensity model $\pi_0$ is accurate *or* the reward imputation model $\hat{r}$ is accurate. This mathematical rigor guarantees that when I simulate an A/B test offline, the results will perfectly mirror the live production metrics.
 
-### 4. Florence-2 Multimodal Feature Fusion (Cross-Attention)
+### 4. Custom Multimodal Feature Fusion (Cross-Attention)
 
-When merging the dense features from the Florence-2 Vision Encoder (dimension $d_v$) with the dense features from the Text Encoder (dimension $d_t$), simple concatenation $[v ; t]$ is sub-optimal. It assumes both modalities are equally important for all items.
+When merging the dense features from the Model Vision Encoder (dimension $d_v$) with the dense features from the Text Encoder (dimension $d_t$), simple concatenation $[v ; t]$ is sub-optimal. It assumes both modalities are equally important for all items.
 
 I implemented a **Task-Conditional Cross-Attention Mechanism**. Given a user query vector $q$, the system calculates a dynamic attention score $\alpha$ to dictate how much the vision vector $v$ should dominate the text vector $t$.
 
@@ -752,7 +548,7 @@ The final fused multimodal embedding $Z_{fused}$ becomes a dynamic weighted sum:
 Z_{fused} = \alpha_{vision} (v W_v) + \alpha_{text} (t W_t)
 ```
 
-If the user searches for "visually stunning red dress," the query vector $q$ mathematically aligns with the vision projection space, driving $\alpha_{vision}$ towards 0.95. The text description is ignored, and the retrieval engine strictly matches based on the Florence-2 pixel features.
+If the user searches for "visually stunning red dress," the query vector $q$ mathematically aligns with the vision projection space, driving $\alpha_{vision}$ towards 0.95. The text description is ignored, and the retrieval engine strictly matches based on the Model pixel features.
 
 ### 5. Exposure Parity and the Mathematics of Fairness
 
@@ -786,32 +582,9 @@ If I adjust the CSS variables in the React frontend, the pipeline bypasses the r
 
 ### Figure 3: Automated Deployment and Rollback Matrix
 
-```mermaid
-sequenceDiagram
-    participant Dev as Developer
-    participant GH as GitHub Actions
-    participant Fly as Fly.io Infrastructure
-    participant Nginx as Edge Proxy
-
-    Dev->>GH: Push to main (Backend change)
-    GH->>GH: Run PyTest & CodeQL Scans
-    GH->>Fly: Execute flyctl deploy --strategy rolling
-    
-    loop Rolling Update
-        Fly->>Fly: Provision new containers
-        Fly->>Fly: Drain connections on old containers
-    end
-    
-    GH->>Nginx: Automated Smoke Test (retry_curl)
-    
-    alt HTTP 200 OK
-        GH->>Dev: Deployment Successful
-    else HTTP 500 or Timeout
-        GH->>Fly: flyctl releases rollback
-        Fly->>Fly: Restore previous known-good state
-        GH->>Dev: Deployment Failed - Rolled Back Safely
-    end
-```
+<div align="center">
+<img src="media/figures/f9.png" alt="Automated Deployment and Rollback Matrix" width="100%"/>
+</div>
 
 ### Edge Security and Nginx
 The frontend Vite server and the FastAPI backend are completely separate. The backend does not possess a public IP address. It is deployed onto an internal Fly.io `flycast` network.

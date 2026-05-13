@@ -20,7 +20,7 @@ class VectorIndexSnapshot:
 class VectorIndexService:
     def __init__(self, index_path: Path) -> None:
         self.index_path = index_path
-        self._index: FaissVectorIndex | None = None
+        self._index: Any = None
         self._payload: dict[str, Any] | None = None
 
     def available(self) -> bool:
@@ -38,7 +38,13 @@ class VectorIndexService:
             raise ValueError("empty index payload")
 
         dimension = len(items[0].get("vector", [])) if isinstance(items[0], dict) else 0
-        index = FaissVectorIndex(dimension=dimension, name="trained_vector_index", index_type="Flat")
+        try:
+            import faiss
+            index = FaissVectorIndex(dimension=dimension, name="trained_vector_index", index_type="Flat")
+        except ImportError:
+            from src.retrieval.index import InMemoryVectorIndex
+            index = InMemoryVectorIndex(dimension=dimension, name="trained_vector_index")
+            
         for entry in items:
             if not isinstance(entry, dict):
                 continue

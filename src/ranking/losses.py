@@ -41,6 +41,8 @@ def _clamp(value: float, low: float, high: float) -> float:
 def pointwise_logloss(labels: Iterable[int], predictions: Iterable[float]) -> LossResult:
     label_list = [float(label) for label in labels]
     prediction_list = [float(prediction) for prediction in predictions]
+    if len(label_list) != len(prediction_list):
+        raise ValueError("Lists must be of equal length")
     total = 0.0
     count = 0
     for label, prediction in zip(label_list, prediction_list):
@@ -75,6 +77,8 @@ def pairwise_hinge_loss(pairs: Iterable[tuple[float, float]], margin: float = 1.
     return LossResult(name=PAIRWISE_HINGE, value=value, details={"count": float(count), "margin": float(margin)})
 
 def listwise_softmax_loss(scores: list[float], labels: list[int]) -> LossResult:
+    if len(scores) != len(labels):
+        raise ValueError("Lists must be of equal length")
     if not scores:
         return LossResult(name=LISTWISE_SOFTMAX, value=0.0, details={"count": 0.0})
     max_score = max(scores)

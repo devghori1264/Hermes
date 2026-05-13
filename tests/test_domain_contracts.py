@@ -31,7 +31,11 @@ def test_validate_user() -> None:
 
 
 def test_validate_session() -> None:
-    payload = {"session_id": "session_1", "started_at_utc": "2026_05_08T00:00:00Z"}
+    payload = {
+        "session_id": "session_1", 
+        "started_at_utc": "2026_05_08T00:00:00Z",
+        "context": {"device_type": "mobile", "cohort": "control"}
+    }
     validate_session(payload)
 
 

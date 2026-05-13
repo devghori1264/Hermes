@@ -462,7 +462,14 @@ def train_ranking_model(
     best_auc = -1.0
     best_artifact = None
 
-    for candidate_objective in cfg.candidate_objectives:
+    candidates = []
+    for obj in cfg.candidate_objectives:
+        try:
+            candidates.append(normalize_objective_name(obj))
+        except ValueError:
+            pass
+
+    for candidate_objective in candidates:
         if candidate_objective == PAIRWISE_HINGE:
             weights, bias, total_loss = _fit_pairwise_model(scaled, query_groups, cfg)
         elif candidate_objective in [POINTWISE_LOGLOSS, POINTWISE_FOCAL]:

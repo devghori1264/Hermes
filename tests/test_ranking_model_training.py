@@ -26,7 +26,7 @@ def test_ranker_training_writes_model(tmp_path: Path, objective: str) -> None:
     result = train_ranking_model(
         _training_frame(),
         tmp_path,
-        config=RankingModelConfig(epochs=16, learning_rate=0.08, seed=21, objective=objective),
+        config=RankingModelConfig(epochs=16, learning_rate=0.08, seed=21, objective=objective, candidate_objectives=(objective,)),
     )
 
     model_path = tmp_path / "ranking_model.json"
@@ -47,7 +47,7 @@ def test_ranker_training_normalizes_objective_alias(tmp_path: Path) -> None:
     result = train_ranking_model(
         _training_frame(),
         tmp_path,
-        config=RankingModelConfig(epochs=8, learning_rate=0.08, seed=21, objective="pairwise"),
+        config=RankingModelConfig(epochs=8, learning_rate=0.08, seed=21, objective="pairwise", candidate_objectives=("pairwise",)),
     )
     assert result.artifact.objective == "pairwise_hinge"
 
