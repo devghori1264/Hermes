@@ -20,6 +20,18 @@ export default function App() {
   const chatInputRef = useRef(null)
   const videoRef = useRef(null)
 
+  const fetchMetrics = async () => {
+    try {
+      const res = await fetch('/api/metrics')
+      if (res.ok) {
+        const data = await res.json()
+        setMetrics(data)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   useEffect(() => {
     const t = setTimeout(fetchMetrics, 2500)
     const interval = setInterval(fetchMetrics, 20000)
@@ -48,16 +60,6 @@ export default function App() {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [chatHistory])
-
-  const fetchMetrics = async () => {
-    try {
-      const res = await fetch('/api/metrics')
-      if (res.ok) {
-        const data = await res.json()
-        setMetrics(data)
-      }
-    } catch (e) { }
-  }
 
   const handleVideoTimeUpdate = () => {
     if (videoRef.current) {
@@ -116,6 +118,7 @@ export default function App() {
         setStatus('error')
       }
     } catch (err) {
+      console.error(err)
       setStatus('error')
     } finally {
       clearTimeout(wakeTimer)
@@ -133,11 +136,6 @@ export default function App() {
     ecommerce: 'Search for products...',
     games: 'Search any video game...',
     videos: 'Search any video...'
-  }
-  const cycleDomain = () => {
-    const domains = ['movies', 'music', 'books', 'news', 'ecommerce', 'games', 'videos']
-    const idx = domains.indexOf(domain)
-    setDomain(domains[(idx + 1) % domains.length])
   }
   const isImplementedDomain = (d) => ['movies', 'music', 'books'].includes(d)
 
@@ -161,7 +159,9 @@ export default function App() {
         const data = await res.json()
         setSubResults(prev => ({ ...prev, [title]: data.items || [] }))
       }
-    } catch (e) { }
+    } catch (e) {
+      console.error(e)
+    }
     setLoadingSubs(prev => ({ ...prev, [title]: false }))
   }
 
@@ -195,6 +195,7 @@ export default function App() {
         setChatHistory(prev => [...prev, { role: 'agent', content: 'Connection interrupted. Please try again.' }])
       }
     } catch (err) {
+      console.error(err)
       setChatHistory(prev => [...prev, { role: 'agent', content: 'Connection interrupted. Please try again.' }])
     } finally {
       setIsChatting(false)
