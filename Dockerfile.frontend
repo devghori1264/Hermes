@@ -12,6 +12,7 @@ FROM nginx:alpine
 
 ENV BACKEND_INTERNAL_URL=http://127.0.0.1:8080
 ENV INTERNAL_GATE_TOKEN=
+ENV DOLLAR=$
 
 RUN rm -rf /usr/share/nginx/html/*
 
