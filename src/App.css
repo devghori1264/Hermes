@@ -1,10 +1,34 @@
 .app-wrapper {
   position: relative;
   min-height: 100vh;
-  width: 100vw;
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 100vw;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
+}
+
+.skip-link {
+  position: absolute;
+  left: 0.75rem;
+  top: 0.75rem;
+  z-index: 10050;
+  padding: 0.5rem 1rem;
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+  border-radius: 8px;
+  transform: translateY(-220%);
+  transition: transform 0.2s ease;
+  font-family: var(--font-sans);
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  outline: 2px solid #34d399;
+  outline-offset: 3px;
 }
 
 .video-background {
@@ -24,8 +48,10 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
+  max-width: 100vw;
   height: 100vh;
+  height: 100dvh;
   background: radial-gradient(ellipse at 30% 20%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0));
   z-index: -1;
 }
@@ -34,9 +60,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.75rem 3.5rem;
+  padding: clamp(1rem, 2vw, 1.75rem) clamp(1rem, 4vw, 3.5rem);
   width: 100%;
   z-index: 10;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .brand-container {
@@ -46,7 +74,7 @@
 }
 
 .brand-title {
-  font-size: 1.75rem;
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
   color: #fff;
   letter-spacing: 0.08em;
   line-height: 1;
@@ -116,8 +144,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 0 3.5rem 3rem;
-  max-width: 1440px;
+  padding: 0 clamp(1rem, 4vw, 3.5rem) clamp(1.5rem, 3vw, 3rem);
+  max-width: min(1440px, 100%);
   margin: 0 auto;
   width: 100%;
 }
@@ -137,7 +165,7 @@
 }
 
 .hero-headline {
-  font-size: 4.5rem;
+  font-size: clamp(2rem, 6vw, 4.5rem);
   color: #fff;
   text-align: center;
   line-height: 1.05;
@@ -145,10 +173,12 @@
 }
 
 .hero-sub {
-  font-size: 1.1rem;
+  font-size: clamp(0.95rem, 2.2vw, 1.1rem);
   color: rgba(255, 255, 255, 0.4);
   margin-bottom: 2.5rem;
   font-family: var(--font-sans);
+  text-align: center;
+  padding: 0 0.5rem;
 }
 
 .hero-section.collapsed .hero-headline,
@@ -159,9 +189,11 @@
 .search-bar {
   position: relative;
   width: 100%;
-  max-width: 640px;
+  max-width: min(640px, 100%);
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
@@ -246,7 +278,8 @@
   gap: 1.5rem;
   margin-top: 2rem;
   width: 100%;
-  z-index: -1;
+  position: relative;
+  z-index: 1;
 }
 
 .section-label {
@@ -871,14 +904,15 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   color: rgba(255, 255, 255, 0.8);
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2.5vw, 0.9rem);
   line-height: 1.5;
   text-align: center;
   backdrop-filter: blur(8px);
-  max-width: 600px;
+  max-width: min(600px, 100%);
   margin-left: auto;
   margin-right: auto;
-  z-index: -1;
+  position: relative;
+  z-index: 1;
 }
 
 .unimplemented-notice strong {
@@ -968,4 +1002,159 @@
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto;
+}
+
+@media (min-width: 1920px) {
+  .main-content {
+    max-width: min(1680px, 96vw);
+  }
+
+  .hero-section {
+    padding-top: min(20vh, 14rem);
+  }
+}
+
+@media (max-width: 1536px) and (min-width: 1025px) {
+  .results-layout {
+    grid-template-columns: 1fr min(340px, 32vw);
+  }
+}
+
+@media (max-width: 1280px) and (min-width: 1025px) {
+  .results-layout {
+    grid-template-columns: 1fr 300px;
+    gap: 1.25rem;
+  }
+
+  .chat-col {
+    height: min(520px, 70vh);
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-section {
+    padding-top: 12vh;
+  }
+
+  .status-pill {
+    max-width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .brand-container {
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+
+  .brand-subtitle {
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+  }
+
+  .top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .status-pill {
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  .card-drawer {
+    padding-left: 1rem;
+  }
+
+  .chat-bubble {
+    max-width: 94%;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .search-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.35rem;
+  }
+
+  .search-icon {
+    padding: 0.35rem 0 0 0.75rem;
+  }
+
+  .search-field {
+    padding: 0.85rem 1rem;
+    width: 100%;
+  }
+
+  .domain-dropdown-container {
+    width: 100%;
+  }
+
+  .domain-badge-search {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .search-action {
+    width: 100%;
+    margin: 0.25rem 0;
+    min-height: 44px;
+  }
+
+  .compose-send {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .hero-section {
+    padding-top: 8vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-headline {
+    font-size: clamp(1.65rem, 9vw, 2.4rem);
+  }
+
+  .card-main {
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .card-confidence {
+    margin-left: auto;
+  }
+
+  .chat-col {
+    height: min(480px, 65dvh);
+  }
+}
+
+@media (max-width: 390px) {
+  .top-bar {
+    padding: 0.85rem 0.75rem;
+  }
+
+  .main-content {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .result-card {
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .brand-title {
+    letter-spacing: 0.05em;
+  }
+
+  .status-text,
+  .status-sync {
+    font-size: 0.68rem;
+  }
 }

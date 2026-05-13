@@ -36,6 +36,8 @@ jobs:
               - 'eslint.config.js'
               - 'index.html'
               - 'public/**'
+              - 'sync_media.cjs'
+              - 'media/**'
               - 'Dockerfile.frontend'
               - 'nginx/**'
             backend:

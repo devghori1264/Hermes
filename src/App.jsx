@@ -21,9 +21,28 @@ export default function App() {
   const videoRef = useRef(null)
 
   useEffect(() => {
-    fetchMetrics()
+    const t = setTimeout(fetchMetrics, 2500)
     const interval = setInterval(fetchMetrics, 20000)
-    return () => clearInterval(interval)
+    return () => {
+      clearTimeout(t)
+      clearInterval(interval)
+    }
+  }, [])
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const sync = () => {
+      const el = videoRef.current
+      if (!el) return
+      if (mq.matches) {
+        el.pause()
+      } else {
+        el.play().catch(() => {})
+      }
+    }
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
   }, [])
 
   useEffect(() => {
@@ -190,15 +209,22 @@ export default function App() {
   }
 
   return (
+    <>
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
     <div className="app-wrapper">
       <video
         ref={videoRef}
         autoPlay
         muted
         playsInline
+        poster="/media/video_poster.jpg"
         onTimeUpdate={handleVideoTimeUpdate}
         className="video-background"
+        aria-hidden="true"
       >
+        <source src="/media/FF1.webm" type="video/webm" />
         <source src="/media/ff1.mp4" type="video/mp4" />
       </video>
       <div className="bg-overlay"></div>
@@ -213,7 +239,7 @@ export default function App() {
         </div>
       )}
 
-      <nav className="top-bar fade-in">
+      <nav className="top-bar fade-in" aria-label="Primary">
         <div className="brand-container">
           <h1 className="brand-title">HERMES</h1>
           <span className="brand-subtitle">Universal Intelligence Protocol</span>
@@ -228,7 +254,7 @@ export default function App() {
         </div>
       </nav>
 
-      <main className="main-content">
+      <main id="main-content" className="main-content" tabIndex={-1}>
         <section className={`hero-section ${results ? 'collapsed' : ''}`}>
           <h2 className="hero-headline">Discover Intelligence</h2>
           <p className="hero-sub">Explore the neural recommendation engine</p>
@@ -440,5 +466,6 @@ export default function App() {
         )}
       </main>
     </div>
+    </>
   )
 }

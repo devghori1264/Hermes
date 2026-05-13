@@ -76,6 +76,8 @@ env.bak/
 venv.bak/
 pip-log.txt
 pip-delete-this-directory.txt
+public/media/
+public/main_icon.png
 node_modules/
 jspm_packages/
 .npm/

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hmac
 import json
 from pathlib import Path
 
@@ -82,8 +83,10 @@ def create_blueprint(base_path: Path, deps: ServingDependencies, settings: Setti
         if not expected:
             return
         if request.path.startswith('/api/') or request.path in ['/similarity', '/recommend']:
-            token = request.headers.get("X-Admin-Access-Token")
-            if token != expected:
+            token = request.headers.get("X-Admin-Access-Token", "")
+            provided = token.encode("utf-8")
+            expected_b = expected.encode("utf-8")
+            if len(provided) != len(expected_b) or not hmac.compare_digest(provided, expected_b):
                 abort(403)
 
     @bp.route("/", methods=["GET"])
